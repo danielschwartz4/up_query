@@ -3,6 +3,14 @@ const bodyParser = require("body-parser");
 const app = express();
 const port = 3000;
 const AthenaExpress = require('athena-express')
+const test_query = require('./test_query')
+const state_query = require('./state_query')
+const city_query = require('./city_query')
+const name_query = require('./name_query')
+const state_name_query = require('./state_name_query')
+const st_ct_nm_query = require('./st_ct_nm_query')
+const st_ct_nm_ad_query = require('./st_ct_nm_ad_query')
+
 
 // athena logic
 
@@ -30,7 +38,7 @@ app.get("/", (request, response) => {
 // athena test route
 
 let myQuery = {
-  sql: "SELECT * FROM wvupdata limit 10", /* required */
+  sql: "SELECT * FROM alldata limit 1000", /* required */
   db: "updata"
 };
 
@@ -39,29 +47,36 @@ app.get("/test_query", (req, res) => {
     .query(myQuery)
     .then((results) => {
       res.send(results);
+      console.log("test_query")
     })
     .catch((error) => {
       console.log(error);
     });
 })
+
+// test_query.testFunc()
 
 // query by state
 
 app.get("/states/:state", (req, res) => {
   let state = req.params.state;
   let stateQuery = {
-    sql: `SELECT * FROM alldata WHERE owner_state = '${state}' LIIMIT 100`,
+    sql: `SELECT * FROM alldata WHERE owner_state = '${state}' LIMIT 100`,
     db: 'updata'
   };
   athenaExpress
     .query(stateQuery)
     .then((results) => {
       res.send(results);
+      console.log("states")
     })
     .catch((error) => {
       console.log(error);
     });
 })
+
+// state_query.stateFunc()
+
 
 // query by city
 
@@ -81,6 +96,8 @@ app.get("/cities/:city", (req, res) => {
       console.log(error);
     });
 });
+
+// city_query.cityFunc()
 
 // query by name
 
@@ -109,6 +126,8 @@ app.get("/names/:name", (req, res) => {
       console.log(error);
     });
 });
+
+// name_query.nameFunc()
 
 // query by state and name
 
@@ -142,6 +161,7 @@ app.get("/states/:state/:name", (req, res) => {
     });
 });
 
+// state_name_query.stateNameFunc()
 
 // query by state, city and name
 
@@ -176,6 +196,8 @@ app.get("/states/:state/:city/:name", (req, res) => {
       console.log(error);
     });
 });
+
+// st_ct_nm_query.stateCityNameFunc()
 
 // query by state, city, address and name
 
@@ -214,6 +236,7 @@ app.get("/states/:state/:city/:street/:name", (req, res) => {
       console.log(error);
     });
 });
+// st_ct_nm_ad_query.stateCityNameAddressFunc()
 
 app.listen(port, () => console.log("runnnnnnnning..."))
 
