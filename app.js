@@ -3,13 +3,13 @@ const bodyParser = require("body-parser");
 const app = express();
 const port = 3000;
 const AthenaExpress = require('athena-express')
-const test_query = require('./test_query')
-const state_query = require('./state_query')
-const city_query = require('./city_query')
-const name_query = require('./name_query')
-const state_name_query = require('./state_name_query')
-const st_ct_nm_query = require('./st_ct_nm_query')
-const st_ct_nm_ad_query = require('./st_ct_nm_ad_query')
+const test_query = require('./Queries/test_query')
+const state_query = require('./Queries/state_query')
+const city_query = require('./Queries/city_query')
+const name_query = require('./Queries/name_query')
+const state_name_query = require('./Queries/state_name_query')
+const st_ct_nm_query = require('./Queries/st_ct_nm_query')
+const st_ct_nm_ad_query = require('./Queries/st_ct_nm_ad_query')
 
 
 // athena logic
