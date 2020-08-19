@@ -9,7 +9,7 @@ global.fetch = require('node-fetch');
 const poolData = {    
   UserPoolId : "us-east-2_uCCIrn7BB", // Your user pool id here    
   ClientId : "4b9slvepno75s8usoqurs8jnte" // Your client id here
-  }; 
+};
 const pool_region = 'us-east-2';
 
 const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
