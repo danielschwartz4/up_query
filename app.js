@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const app = express();
 const port = 3000;
 const AthenaExpress = require('athena-express')
+require('dotenv').config()
 const test_query = require('./Queries/test_query')
 const state_query = require('./Queries/state_query')
 const city_query = require('./Queries/city_query')
@@ -17,8 +18,8 @@ const st_ct_nm_ad_query = require('./Queries/st_ct_nm_ad_query')
 const aws = require("aws-sdk");
 const awsCredentials = {
   region: "us-east-2",
-  accessKeyId: "AKIA3OA4SIGHE76FA2OV",
-  secretAccessKey: "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",
+  accessKeyId: process.env.MY_KEY,
+  secretAccessKey: process.env.SECRET_KEY,
 };
 aws.config.update(awsCredentials);
 
