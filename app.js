@@ -12,6 +12,15 @@ const state_name_query = require('./Queries/state_name_query')
 const st_ct_nm_query = require('./Queries/st_ct_nm_query')
 const st_ct_nm_ad_query = require('./Queries/st_ct_nm_ad_query')
 
+const AmazonCognitoIdentity = require('amazon-cognito-identity-js');
+const poolData = {
+   UserPoolId: process.env.USER_POOL_ID,
+   ClientId: process.env.CLIENT_ID
+};
+
+const pool_region = "us-east-2";
+
+const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
 
 // athena logic
 
@@ -238,6 +247,59 @@ app.get("/states/:state/:city/:street/:name", (req, res) => {
     });
 });
 // st_ct_nm_ad_query.stateCityNameAddressFunc()
+
+Validate = function(token, callback){
+  request({
+      url : `https://cognito
+idp.${pool_region}.amazonaws.com/${poolData.UserPoolId}/.well-known/jwks.json`,
+      json : true
+   }, function(error, response, body){
+      if (!error && response.statusCode === 200) {
+          pems = {};
+          var keys = body['keys'];
+          for(var i = 0; i < keys.length; i++) {
+               var key_id = keys[i].kid;
+               var modulus = keys[i].n;
+               var exponent = keys[i].e;
+               var key_type = keys[i].kty;
+               var jwk = { kty: key_type, n: modulus, e: exponent};
+               var pem = jwkToPem(jwk);
+               pems[key_id] = pem;
+          }
+       var decodedJwt = jwt.decode(token, {complete: true});
+               if (!decodedJwt) {
+                   console.log("Not a valid JWT token");
+                   callback(new Error('Not a valid JWT token'));
+               }
+               var kid = decodedJwt.header.kid;
+               var pem = pems[kid];
+               if (!pem) {
+                   console.log('Invalid token');
+                   callback(new Error('Invalid token'));
+               }
+              jwt.verify(token, pem, function(err, payload) {
+                   if(err) {
+                       console.log("Invalid Token.");
+                       callback(new Error('Invalid token'));
+                   } else {
+                        console.log("Valid Token.");
+                        callback(null, "Valid token");
+                   }
+              });
+      } else {
+            console.log("Error! Unable to download JWKs");
+            callback(error);
+      }
+  });
+}
+
+
+app.post("/sessions", (req, res) => {
+  console.log('Inside POST /login callback function')
+  console.log(req.body)
+  Validate()
+  res.send(`You posted to the login page!\n`)
+})
 
 app.listen(port, () => console.log("runnnnnnnning..."))
 
