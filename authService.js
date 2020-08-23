@@ -3,36 +3,10 @@ require('dotenv').config()
 global.fetch = require('node-fetch');
 global.navigator = () => null;
 
-// cognito logic
-const AmazonCognitoIdentity = require('amazon-cognito-identity-js');
-const poolData = {
-   UserPoolId: process.env.USER_POOL_ID,
-   ClientId: process.env.CLIENT_ID
-};
-
-const pool_region = "us-east-2";
-
-const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
-
-// exports.Register = function (body, callback) {
-//    var name = body.name;
-//    var email = body.email;
-//    var password = body.password;
-//    var attributeList = [];
-   
-//    attributeList.push(new    AmazonCognitoIdentity.CognitoUserAttribute({ Name: "email", Value: email }));
-//    userPool.signUp(name, password, attributeList, null, function (err, result) {
-//      if (err)
-//          callback(err);
-//      var cognitoUser = result.user;
-//      callback(null, cognitoUser);
-//    })
-// }
-
-exports.Validate = function(token, callback){
+Validate = function(token, callback){
    request({
        url : `https://cognito
-idp.${pool_region}.amazonaws.com/${poolData.UserPoolId}/.well-known/jwks.json`,
+ idp.${pool_region}.amazonaws.com/${poolData.UserPoolId}/.well-known/jwks.json`,
        json : true
     }, function(error, response, body){
        if (!error && response.statusCode === 200) {
@@ -72,4 +46,12 @@ idp.${pool_region}.amazonaws.com/${poolData.UserPoolId}/.well-known/jwks.json`,
              callback(error);
        }
    });
-}
+ }
+ 
+ validate_token = function(req, res){
+   let validate = Validate(req.body.token,function(err, result){
+       if(err)
+           res.send(err.message);
+       res.send(result);
+   })
+ }
