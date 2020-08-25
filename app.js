@@ -127,7 +127,7 @@ app.get("/states/:state", (req, res) => {
   Validate(token);
   let state = req.params.state;
   let stateQuery = {
-    sql: `SELECT * FROM alldata WHERE owner_state = '${state}' LIMIT 100`,
+    sql: `SELECT * FROM alldata WHERE owner_state = '${state}' LIMIT 10000`,
     db: 'updata'
   };
   athenaExpress
