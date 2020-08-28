@@ -4,13 +4,6 @@ const app = express();
 const port = process.env.PORT || 3000;
 const AthenaExpress = require('athena-express')
 require('dotenv').config()
-const test_query = require('./Queries/test_query')
-const state_query = require('./Queries/state_query')
-const city_query = require('./Queries/city_query')
-const name_query = require('./Queries/name_query')
-const state_name_query = require('./Queries/state_name_query')
-const st_ct_nm_query = require('./Queries/st_ct_nm_query')
-const st_ct_nm_ad_query = require('./Queries/st_ct_nm_ad_query')
 const AmazonCognitoIdentity = require('amazon-cognito-identity-js');
 global.fetch = require('node-fetch');
 const request = require('request');
